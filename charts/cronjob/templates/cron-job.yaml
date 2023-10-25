@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "cron-job.fullname" . }}
+spec:
+  {{- if .Values.service.schedule.custom.enabled }}
+  schedule: {{ .Values.service.schedule.custom.frequency | quote}}
+  {{- else }}
+  schedule: {{ .Values.service.schedule.frequency | quote}}
+  {{- end }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: home
+            {{- if .Values.persistence.enabled }}
+              persistentVolumeClaim:
+                claimName: {{ .Values.persistence.existingClaim | default (include "library-chart.fullname" .) }}
+            {{- else }}
+              emptyDir: {}
+            {{- end }}
+          containers:
+          - name: cronjob
+            {{- if .Values.service.image.custom.enabled }}
+            image: "{{ .Values.service.image.custom.repository }}"
+            {{- else }}
+            image: "{{ .Values.service.image.repository }}"
+            {{- end }}
+            imagePullPolicy: {{.Values.service.image.pullPolicy}}
+            {{ if .Values.service.command.custom.enabled -}}
+            command: ["sh", "-c", {{ .Values.service.command.custom.line | quote}} ]
+            {{- end }}
+            env:
+            {{- if .Values.networking.proxy.enabled }}
+            - name: https_proxy
+              value: {{.Values.networking.httpsProxy | quote}}
+            - name: http_proxy
+              value: {{.Values.networking.httpProxy | quote}}
+            - name: HTTP_PROXY
+              value: {{.Values.networking.HTTP_PROXY | quote}}
+            - name: HTTPS_PROXY
+              value: {{.Values.networking.HTTPS_PROXY | quote}}
+            - name: NO_PROXY
+              value: {{.Values.networking.NO_PROXY | quote}}
+            - name: no_proxy
+              value: {{.Values.networking.no_proxy | quote}}
+            {{- end }}
+            resources:
+              {{- toYaml .Values.resources | nindent 14 }}
+            envFrom:
+              {{- if .Values.s3.enabled }}
+              - secretRef:
+                  name: {{ include "library-chart.secretNameS3" . }}
+              {{- end }}
+              {{- if .Values.vault.enabled }}
+              - secretRef:
+                  name: {{ include "library-chart.secretNameVault" . }}
+              {{- end }}
+              {{- if .Values.git.enabled }}
+              - secretRef:
+                  name: {{ include "library-chart.secretNameGit" . }}
+              {{- end }}
+              {{- if (include "library-chart.repository.enabled"  .) }}
+              - configMapRef:
+                  name: {{ include "library-chart.configMapNameRepository" . }}
+              {{- end }}
+          restartPolicy: {{ .Values.service.restartPolicy}}
+        metadata:
+          labels:
+            kubitus-project.gitlab.io/inject-ca-bundle-debian: "true"

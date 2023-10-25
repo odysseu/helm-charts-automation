@@ -1,0 +1,11 @@
+{{- if .Values.service.image.custom.enabled }}
+Your batch launches the image {{.Values.service.image.repository}} with the folowwing schedule : {{.Values.service.schedule.frequency}}
+{{- else}}
+Your batch launches the image {{.Values.service.image.custom.repository}} with the folowwing schedule : {{.Values.service.schedule.frequency}}
+{{- end }}
+
+
+*NOTES about deletion :*
+
+- **You can safely delete this chart and recreate one later**
+- Deleting this chart will stop the potential current schedule and the following ones.

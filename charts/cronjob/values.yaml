@@ -1,0 +1,97 @@
+# Default values for cron-job.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+service:
+  # cronjob:
+  schedule:
+    #frequency: "*/5 * * * *"
+    custom:
+      enabled: false
+      frequency: "* * * * *"
+  image:
+    pullPolicy: Always
+    custom:
+      enabled: false
+      repository: ""
+  restartPolicy: Never
+  command:
+    custom:
+      enabled: false
+      line: ""
+
+networking:
+  proxy:
+    enabled: false
+  httpProxy: ""
+  httpsProxy: ""
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+  NO_PROXY: ""
+  no_proxy: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+s3:
+  # Specifies whether a config map should be created
+  enabled: false
+  endpoint: ""
+  defaultRegion: ""
+  secretAccessKey: ""
+  accessKeyId: ""
+  sessionToken: ""
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 4Gi
+  requests:
+    cpu: 150m
+    memory: 2Gi
+
+vault:
+  enabled: false
+  configMapName: ""
+  token: ""
+  url: ""
+  mount: ""
+  secret: ""
+  directory: ""
+
+git:
+  enabled: false
+  configMapName: ""
+  name: ""
+  email: ""
+  cache: ""
+  token: ""
+  repository: ""
+  branch: ""
+
+persistence:
+  enabled: false
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+repository:
+  configMapName: ""
+  pipRepository: ""
+  condaRepository: ""
