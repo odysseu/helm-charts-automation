@@ -4,8 +4,6 @@
 
 Will launch any docker image on a specific schedule
 
-**Homepage:** <https://datascience.gitlab-pages.insee.fr/site-documentaire/ls3/modes-operatoires/cronjob/deployer-alimenter-cronjob-bac-sable/>
-
 ## Requirements
 
 | Repository | Name | Version |
