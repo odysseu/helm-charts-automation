@@ -1,7 +1,6 @@
 apiVersion: v2
 name: cron-job
 description: Will launch any docker image on a specific schedule
-home: https://datascience.gitlab-pages.insee.fr/site-documentaire/ls3/modes-operatoires/cronjob/deployer-alimenter-cronjob-bac-sable/
 # icon:
 
 # A chart can be either an 'application' or a 'library' chart.
