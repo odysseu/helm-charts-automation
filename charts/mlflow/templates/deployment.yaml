@@ -24,9 +24,9 @@ spec:
     spec:
       {{- if .Values.security.enabled }}
       volumes:
-      - name: configmap-auth-ini-volume
-        configMap:
-          name: {{ .Release.Name }}-configmap-mlflow-auth
+      - name: secret-auth-ini-volume
+        secret:
+          secretName: {{ .Release.Name }}-secret-mlflow-auth
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -57,12 +57,12 @@ spec:
           imagePullPolicy: {{ .Values.service.image.pullPolicy }}
           envFrom: 
             {{- if .Values.s3.enabled }}
-            - configMapRef:
-                name: {{ include "library-chart.configMapNameS3" . }}
+            - secretRef:
+                name: {{ include "library-chart.secretNameS3" . }}
             {{- end }}
           {{- if .Values.security.enabled }}
           volumeMounts:
-          - name: configmap-auth-ini-volume
+          - name: secret-auth-ini-volume
             mountPath: /home/oyxia/work/basic_auth.ini
             subPath: basic_auth.ini 
           {{- end }}
