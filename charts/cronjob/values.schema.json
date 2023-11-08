@@ -429,7 +429,7 @@
 					"hidden": {
 						"value": false,
 						"path": "s3/enabled"
-					} 
+					}
 				},
 				"sessionToken": {
 					"description": "AWS S3 session Token",
